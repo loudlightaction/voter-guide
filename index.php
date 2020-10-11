@@ -115,7 +115,7 @@
    <div class="container">
 
   <?php if ($PROFILE) { ?>
-    Your voter info here.
+    Your candidate info here.
 
     <pre>
     <?php print_r($PROFILE) ?>
@@ -124,7 +124,7 @@
     <a class="btn btn-primary" href="<?php print get_this_url() ?>">Search again</a>
 
   <?php } else { ?>
-    <h1>Voter Lookup</h1>
+    <h1>Voter Guide</h1>
     <div class="address-form">
       <form action="<?php print get_this_url() ?>" method="GET">
         <div class="form-group">
