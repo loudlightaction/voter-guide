@@ -2,14 +2,14 @@
 
   require __DIR__ . '/vendor/autoload.php';
 
-  if (file_exists(__DIR__ . '.env')) {
+  if (file_exists(__DIR__ . '/.env')) {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
     $dotenv->load();
   }
 
   // require ssl when in production
   if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == "http") {
-    if(!headers_sent()) {
+    if (!headers_sent()) {
       header("Status: 301 Moved Permanently");
       header(sprintf(
           'Location: https://%s%s',
