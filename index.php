@@ -1,5 +1,10 @@
 <?php
-  require __DIR__ . '/vendor/autoload.php';
+
+  if (is_dir(__DIR__ . '/../vendor/')) {
+    require __DIR__ . '/../vendor/autoload.php';
+  } else {
+    require __DIR__ . '/vendor/autoload.php';
+  }
 
   $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
   $dotenv->load();
