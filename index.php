@@ -3,11 +3,11 @@
   if (is_dir(__DIR__ . '/../vendor/')) {
     require __DIR__ . '/../vendor/autoload.php';
   } else {
+    # local install has local vendor/ and a .env file
     require __DIR__ . '/vendor/autoload.php';
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
   }
-
-  $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-  $dotenv->load();
 
   use \TANIOS\Airtable\Airtable;
 
@@ -65,7 +65,7 @@
       'filterByFormula' => "OR( Race = 'State House District $house_district', Race = 'State Senate District $senate_district' )"
     );
 
-    error_log(var_export($params, true));
+    //error_log(var_export($params, true));
   
     $request = $airtable->getContent('Table 1', $params);
   
@@ -77,6 +77,8 @@
 ?>
 
 <?php
+
+  $PROFILE = null; # if we have appropriate params, we'll define it.
 
   if (array_key_exists('address', $_GET)) { 
     // perform Google Civic API lookup and redirect with ?sd=X&hd=Y
