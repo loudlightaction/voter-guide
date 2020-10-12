@@ -7,6 +7,12 @@
     $dotenv->load();
   }
 
+  // require ssl when in production
+  if ($_SERVER['SERVER_NAME'] == 'voterguide.loudlightaction.org' && get_scheme() == 'http') {
+    header('Location: ' . get_this_url('https'));
+    exit(0);
+  }
+
   use \TANIOS\Airtable\Airtable;
 
   function get_scheme() {
@@ -17,9 +23,10 @@
     return $scheme;
   }
   
-  function get_this_url() {
+  function get_this_url($scheme=null) {
+    if (!$scheme) { $scheme = get_scheme(); }
     return sprintf("%s://%s:%s%s",
-      get_scheme(), $_SERVER['SERVER_NAME'],
+      $scheme, $_SERVER['SERVER_NAME'],
       $_SERVER['SERVER_PORT'],
       $_SERVER['PHP_SELF']);
   }
