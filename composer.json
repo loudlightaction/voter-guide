@@ -3,5 +3,8 @@
         "vlucas/phpdotenv": "^5.2",
         "rmccue/requests": ">=1.0",
         "sleiman/airtable-php": "^2.4"
+    },
+    "require-dev": {
+        "heroku/heroku-buildpack-php": "*"
     }
 }
