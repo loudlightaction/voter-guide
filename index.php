@@ -25,9 +25,9 @@
   
   function get_this_url($scheme=null) {
     if (!$scheme) { $scheme = get_scheme(); }
-    return sprintf("%s://%s:%s%s",
-      $scheme, $_SERVER['SERVER_NAME'],
-      $_SERVER['SERVER_PORT'],
+    return sprintf("%s://%s%s",
+      $scheme,
+      $_SERVER['SERVER_NAME'],
       $_SERVER['PHP_SELF']);
   }
   
