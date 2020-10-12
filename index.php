@@ -1,10 +1,8 @@
 <?php
 
-  if (is_dir(__DIR__ . '/../vendor/')) {
-    require __DIR__ . '/../vendor/autoload.php';
-  } else {
-    # local install has local vendor/ and a .env file
-    require __DIR__ . '/vendor/autoload.php';
+  require __DIR__ . '/vendor/autoload.php';
+
+  if (file_exists(__DIR__ . '.env')) {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
     $dotenv->load();
   }
