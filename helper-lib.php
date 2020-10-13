@@ -80,8 +80,9 @@ use RedisClient\Client\Version\RedisClient2x6;
 use RedisClient\ClientFactory;
 
 function redis_client() {
+  $redis_url = str_replace("redis://", "", $_ENV['REDIS_URL']);
   return new RedisClient([
-    'server' => $_ENV['REDIS_URL'],
+    'server' => $redis_url,
     'timeout' => 2
   ]);
 }
