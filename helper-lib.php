@@ -81,10 +81,13 @@ use RedisClient\ClientFactory;
 
 function redis_client() {
   $redis_url = str_replace("redis://", "", $_ENV['REDIS_URL']);
-  return new RedisClient([
-    'server' => $redis_url,
-    'timeout' => 2
-  ]);
+  if (preg_match("/^h:(.+?)@(.+)/", $redis_url, $matches)) {
+    $redis = new RedisClient(['server' => $matches[2], 'timeout' => 2]);
+    $redis->auth($matches[1]);
+    return $redis;
+  } else {
+    return new RedisClient([ 'server' => $redis_url, 'timeout' => 2 ]);
+  }
 }
 
 function get_candidate_questions() {
