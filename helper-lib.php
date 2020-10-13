@@ -157,5 +157,13 @@ function get_senate_candidates($profile) {
   return $senate;
 }
 
-
+function get_house_candidates($profile) {
+  $house = array();
+  foreach($profile as $candidate) {
+    if ($candidate->{'fields'}->{'Chamber'} == 'State House') {
+      array_push($house, $candidate);
+    }
+  }
+  return $house;
+}
 
