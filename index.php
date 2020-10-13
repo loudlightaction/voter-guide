@@ -1,97 +1,10 @@
 <?php
 
   require __DIR__ . '/vendor/autoload.php';
+  require __DIR__ . '/helper-lib.php';
 
-  if (file_exists(__DIR__ . '/.env')) {
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-    $dotenv->load();
-  }
-
-  // require ssl when in production
-  if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == "http") {
-    if (!headers_sent()) {
-      header("Status: 301 Moved Permanently");
-      header(sprintf(
-          'Location: https://%s%s',
-          $_SERVER['HTTP_HOST'],
-          $_SERVER['REQUEST_URI']
-      ));
-      exit();
-    }
-  }
-
-  use \TANIOS\Airtable\Airtable;
-
-  function get_scheme() {
-    $scheme = 'http';
-    if (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS'] == 'on') {
-      $scheme .= 's';
-    }
-    if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == "http") {
-      $scheme = 'https';
-    }
-    return $scheme;
-  }
-  
-  function get_this_url($scheme=null) {
-    if (!$scheme) { $scheme = get_scheme(); }
-    return sprintf("%s://%s%s",
-      $scheme,
-      $_SERVER['SERVER_NAME'],
-      $_SERVER['PHP_SELF']);
-  }
-  
-  function get_voter_info($address, $zipcode) {
-    $api_url = sprintf(
-      'https://www.googleapis.com/civicinfo/v2/representatives?key=%s&address=%s&electionId=%s',
-      $_ENV['GOOGLE_API_KEY'],
-      urlencode("$address $zipcode"),
-      $_ENV['GOOGLE_ELECTION_ID']
-    );
-  
-  //  error_log("api url: $api_url");
-  
-    $response = Requests::get($api_url, array('Content-Type' => 'application/json'));
-  
-  //  error_log(var_export($response, true));
-  //  error_log(var_export($response->body, true));
-  
-    $voter_info = array();
-    $resp = json_decode($response->body, true);
-  
-    foreach(array_keys($resp['divisions']) as $div) {
-      if (preg_match("/ocd-division\/country:us\/state:ks\/sldu:(\w+)/", $div, $matches)) {
-        $voter_info['sd'] = $matches[1];
-      } elseif (preg_match("/ocd-division\/country:us\/state:ks\/sldl:(\w+)/", $div, $matches)) {
-        $voter_info['hd'] = $matches[1];
-      }
-    }
-  
-    return $voter_info;
-  }
-  
-  function get_candidate_info($senate_district, $house_district) {
-    $airtable = new Airtable(array(
-      'api_key' => $_ENV['AIRTABLE_API_KEY'],
-      'base'    => $_ENV['AIRTABLE_BASE_ID']
-    ));
-
-    $params = array(
-      'filterByFormula' => "OR( Race = 'State House District $house_district', Race = 'State Senate District $senate_district' )"
-    );
-
-    //error_log(var_export($params, true));
-  
-    $request = $airtable->getContent('Table 1', $params);
-  
-    $records = $request->getResponse()['records'];
-  
-    return $records;
-  }
-
-?>
-
-<?php
+  init_env();
+  force_ssl_in_production();
 
   $PROFILE = null; # if we have appropriate params, we'll define it.
 
@@ -110,10 +23,8 @@
 
   if (array_key_exists('sd', $_GET) && array_key_exists('hd', $_GET)) {
     // lookup Airtable details, caching if found
-    $sd = $_GET['sd'];
-    $hd = $_GET['hd'];
-
-    $PROFILE = get_candidate_info($sd, $hd);
+    $PROFILE = get_candidate_info(get_sd(), get_hd());
+    $QUESTIONS = get_candidate_questions();
 
     if (!$PROFILE) {
       $PROFILE = array('error' => "We're sorry, we could not locate candidates for Senate District $sd and House District $hd");
@@ -131,19 +42,98 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
+    <!-- icons -->
+    <script src="https://kit.fontawesome.com/858b4d9129.js" crossorigin="anonymous"></script>
+
     <title>Kansas Voter Guide</title>
+
+    <style>
+      .nav-bg {
+        background-color: #1f3c67!important;
+      }
+      .border-dark {
+        border-color: #1f3c67!important;
+      }
+    </style>
   </head>
   <body>
-   <div class="container">
+    <div class="container-fluid p-0 mb-2">
+      <ul class="nav nav-bg">
+        <?php if ($PROFILE) { ?>
+        <li class="nav-item">
+          <a class="nav-link text-light" href="<?= get_this_url() ?>">
+            <i class="fas fa-university"></i> State Races
+          </a>
+        </li>
+        <?php } ?>
+        <li class="nav-item"><!-- TODO drop? -->
+          <a class="nav-link text-light" href="<?= get_this_url() ?>">Lookup by Address</a>
+        </li>
+      </ul>
+    </div>
+    <div class="container">
 
-  <?php if ($PROFILE) { ?>
-    Your candidate info here.
+  <?php if ($PROFILE) {
+    $senate_candidates = get_senate_candidates($PROFILE);
+  ?>
 
+    <div class="h2">
+      State Senate #<?= get_sd() ?>
+    </div>
+
+    <!-- candidate profiles -->
+    <?php foreach($senate_candidates as $candidate) { ?>
+      <div class="row candidate border-bottom border-dark mt-3 pb-3">
+        <div class="col-3 headshot">
+          <img class="rounded img-fluid" src="<?= $candidate->{'fields'}->{'Photo'}[0]->{'thumbnails'}->{'large'}->{'url'} ?>" />
+        </div>
+        <div class="col name">
+          <div class="h3 name"><?= $candidate->{'fields'}->{'Name'} ?></div>
+          <div class="mt-2 text-secondary party"><?= $candidate->{'fields'}->{'Party'} ?></div>
+          <div class="mt-2 endorsements">
+            <div class="h5">Endorsements</div>
+            <?php foreach($candidate->{'fields'}->{'Endorsed By'} as $endorsement) { ?>
+              <div class="endorsement"><?= $endorsement ?></div>
+            <?php } ?>
+          </div>
+        </div>
+      </div>
+    <?php } ?>
+
+    <!-- candidate issues -->
+    <?php foreach($QUESTIONS as $field => $question) {
+      if (strlen($question) == 0) { continue; }
+    ?>
+     <div class="container issue mt-3 border-bottom border-dark pb-3">
+      <div class="row question">
+        <div class="col">
+          <?= $question ?>
+        </div>
+      </div>
+      <?php foreach($senate_candidates as $candidate) { ?>
+      <div class="row candidate">
+        <div class="col-2">
+          <img class="img-thumbnail" src="<?= $candidate->{'fields'}->{'Photo'}[0]->{'thumbnails'}->{'small'}->{'url'} ?>" />
+        </div>
+        <div class="col">
+          <?= $candidate->{'fields'}->{'Name'} ?>
+        </div>
+        <div class="col">
+          <?= $candidate->{'fields'}->{$field} ?>
+        </div>
+      </div>
+      <?php } ?>
+     </div>
+    <?php } ?>
+
+<!--
+    <small>
     <pre>
     <?php print_r($PROFILE) ?>
+    <?php print_r($QUESTIONS) ?>
     </pre>
-
-    <a class="btn btn-primary" href="<?php print get_this_url() ?>">Search again</a>
+    </small>
+-->
 
   <?php } else { ?>
     <h1>Voter Guide</h1>
@@ -168,6 +158,6 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-   </div><!-- container -->
+    </div><!-- container -->
   </body>
 </html>
