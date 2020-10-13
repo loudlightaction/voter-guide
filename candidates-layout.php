@@ -21,14 +21,15 @@
 <?php foreach($QUESTIONS as $field => $question) {
   if (strlen($question) == 0) { continue; }
 ?>
- <div class="container issue mt-3 border-bottom border-dark pb-3">
-  <div class="row question">
+<div class="row">
+ <div class="container-fluid issue mt-3 border-bottom border-dark pb-3">
+  <div class="row question mb-2">
     <div class="col">
       <?= $question ?>
     </div>
   </div>
   <?php foreach($candidates as $candidate) { ?>
-  <div class="row candidate">
+  <div class="row candidate align-items-center">
     <div class="col-2">
       <img class="img-thumbnail" src="<?= $candidate->{'fields'}->{'Photo'}[0]->{'thumbnails'}->{'small'}->{'url'} ?>" />
     </div>
@@ -41,4 +42,5 @@
   </div>
   <?php } ?>
  </div>
+</div>
 <?php } ?>
