@@ -81,7 +81,7 @@
 
     <?php $candidates = get_senate_candidates($PROFILE); include __DIR__ . '/candidates-layout.php'; ?>
 
-    <div class="h2">
+    <div class="h2 mt-4">
       State House #<?= get_hd() ?>
     </div>
 
