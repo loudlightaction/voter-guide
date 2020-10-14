@@ -74,15 +74,20 @@
     </style>
   </head>
   <body>
-    <div class="container p-0 mb-2">
-      <ul class="nav bg-success">
-        <li class="nav-item">
-          <a class="nav-link text-light" href="<?= get_this_url() ?>">Lookup by Address</a>
-        </li>
-      </ul>
+    <div class="container-fluid nav-bg">
+      <div class="text-light p-2">
+        <h1 class="text-center">Kansas 2020 Voter Guide</h1>
+      </div>
+    </div>
+    <div class="container-fluid bg-info pt-2">
+      <div class="row">
+        <div class="col">
+          <a class="h4 text-light" href="<?= get_this_url() ?>">Lookup by Address</a>
+        </div>
+      </div>
       <?php if ($PROFILE) { ?>
-      <div class="row p-2">
-       <div class="col"><?= htmlspecialchars($_GET['address']) ?></div>
+      <div class="row p-2 text-light">
+        <div class="col"><?= htmlspecialchars($_GET['address']) ?></div>
       </div>
       <?php } ?>
     </div>
@@ -154,6 +159,18 @@
     </div>
    </div>
   <?php } ?>
+
+  <footer>
+    <div class="container-fluid">
+      <div class="row nav-bg">
+        <div class="col text-center p-2">
+          <div><a class="text-light" href="">Voting Locations</a></div>
+          <div><a class="text-light" href="">Check Voter Registration</a></div>
+          <div><a class="text-light" href="">Issue Stances Details</a></div>
+          <div class="font-italic"><a class="text-light" href="">A project of Loud Light Civic Action</a></div>
+        </div>
+      </div>
+  </footer>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
