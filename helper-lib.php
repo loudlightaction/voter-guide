@@ -26,6 +26,11 @@ function init_env() {
 
 use \TANIOS\Airtable\Airtable;
 
+function get_url($str) {
+  if (preg_match("/^https?:/", $str)) { return $str; }
+  return "http://$str";
+}
+
 function get_scheme() {
   $scheme = 'http';
   if (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS'] == 'on') {
@@ -68,6 +73,8 @@ function get_voter_info($address, $zipcode) {
       $voter_info['sd'] = $matches[1];
     } elseif (preg_match("/ocd-division\/country:us\/state:ks\/sldl:(\w+)/", $div, $matches)) {
       $voter_info['hd'] = $matches[1];
+    } elseif (preg_match("/ocd-division\/country:us\/state:ks\/cd:(\w+)/", $div, $matches)) {
+      $voter_info['cd'] = $matches[1];
     }
   }
 

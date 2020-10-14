@@ -6,9 +6,12 @@
     </div>
     <div class="col name">
       <div class="h3 name"><?= $candidate->{'fields'}->{'Name'} ?></div>
-      <div class="mt-2 text-secondary party"><?= $candidate->{'fields'}->{'Party'} ?></div>
-      <div class="mt-2 endorsements">
-        <div class="h5">Endorsements</div>
+      <div class="mt-1 text-secondary party"><?= $candidate->{'fields'}->{'Party'} ?></div>
+      <?php if ($candidate->{'fields'}->{'Website'}) { ?>
+      <div class="mt-1 website"><a href="<?= get_url($candidate->{'fields'}->{'Website'}) ?>"><i class="fas fa-external-link"></i>website</a></div>
+      <?php } ?>
+      <div class="mt-1 endorsements">
+        <div class="h6">Endorsements</div>
         <?php foreach($candidate->{'fields'}->{'Endorsed By'} as $endorsement) { ?>
           <div class="endorsement"><?= $endorsement ?></div>
         <?php } ?>
