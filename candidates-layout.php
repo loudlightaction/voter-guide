@@ -8,14 +8,16 @@
       <div class="h3 name"><?= $candidate->{'fields'}->{'Name'} ?></div>
       <div class="mt-1 text-secondary party"><?= $candidate->{'fields'}->{'Party'} ?></div>
       <?php if ($candidate->{'fields'}->{'Website'}) { ?>
-      <div class="mt-1 website"><a href="<?= get_url($candidate->{'fields'}->{'Website'}) ?>"><i class="fas fa-external-link"></i>website</a></div>
+      <div class="mt-1 website"><a href="<?= get_url($candidate->{'fields'}->{'Website'}) ?>"><i class="fas fa-external-link-alt"></i> website</a></div>
       <?php } ?>
-      <div class="mt-1 endorsements">
+      <?php if ($candidate->{'fields'}->{'Endorsed By'}) { ?>
+      <div class="mt-3 endorsements">
         <div class="h6">Endorsements</div>
         <?php foreach($candidate->{'fields'}->{'Endorsed By'} as $endorsement) { ?>
           <div class="endorsement"><?= $endorsement ?></div>
         <?php } ?>
       </div>
+      <?php } ?>
     </div>
   </div>
 <?php } ?>
@@ -23,6 +25,7 @@
 <!-- candidate issues -->
 <?php foreach($QUESTIONS as $field => $question) {
   if (strlen($question) == 0) { continue; }
+  // TODO check if any answers exist for any candidate and skip otherwise
 ?>
 <div class="row">
  <div class="container-fluid issue mt-3 border-bottom border-dark pb-3">

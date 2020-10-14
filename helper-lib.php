@@ -123,7 +123,7 @@ function get_candidate_questions() {
   return $questions;
 }
 
-function get_candidate_info($senate_district, $house_district) {
+function get_candidate_info($senate_district, $house_district, $cong_district) {
   $airtable = new Airtable(array(
     'api_key' => $_ENV['AIRTABLE_API_KEY'],
     'base'    => $_ENV['AIRTABLE_BASE_ID']
@@ -132,6 +132,7 @@ function get_candidate_info($senate_district, $house_district) {
   $filters = array(
     "State Representative District $house_district",
     "State Senate District $senate_district",
+    "U.S. Representative District $cong_district",
   );
 
   $mapper = function($filter) { return "Race = '$filter'"; };
@@ -161,6 +162,12 @@ function get_hd() {
   }
 }
 
+function get_cd() {
+  if (preg_match("/^\d+$/", $_GET['cd'])) {
+    return $_GET['cd'];
+  }
+}
+
 function get_senate_candidates($profile) {
   $senate = array();
   foreach($profile as $candidate) {
@@ -181,3 +188,12 @@ function get_house_candidates($profile) {
   return $house;
 }
 
+function get_congressional_candidates($profile) {
+  $cong = array();
+  foreach($profile as $candidate) {
+    if ($candidate->{'fields'}->{'Chamber'} == 'U.S. Representative') {
+      array_push($cong, $candidate);
+    }
+  }
+  return $cong;
+}

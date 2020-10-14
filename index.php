@@ -8,14 +8,22 @@
 
   $PROFILE = null; # if we have appropriate params, we'll define it.
 
-  if (array_key_exists('address', $_GET)) { 
+  if (array_key_exists('address', $_GET) && !array_key_exists('hd', $_GET)) { 
     // perform Google Civic API lookup and redirect with ?sd=X&hd=Y
-    $voter_info = get_voter_info($_GET['address'], $_GET['zipcode']);
+    $address = $_GET['address'];
+    $zipcode = $_GET['zipcode'];
+    $voter_info = get_voter_info($address, $zipcode);
+
+    if ($zipcode && strpos($address, $zipcode)) {
+      $voter_info['address'] = $address;
+    } else {
+      $voter_info['address'] = "$address $zipcode";
+    }
 
     $redirect_url = sprintf("%s?%s", get_this_url(), http_build_query($voter_info));
 
     header('Location: ' . $redirect_url);
-    //error_log("Redirecting to $redirect_url");
+    error_log("Redirecting to $redirect_url");
     print "Redirecting to $redirect_url";
     exit(0);
 
@@ -23,7 +31,7 @@
 
   if (array_key_exists('sd', $_GET) && array_key_exists('hd', $_GET)) {
     // lookup Airtable details, caching if found
-    $PROFILE = get_candidate_info(get_sd(), get_hd());
+    $PROFILE = get_candidate_info(get_sd(), get_hd(), get_cd());
     $QUESTIONS = get_candidate_questions();
 
     if (!$PROFILE) {
@@ -54,38 +62,68 @@
       .border-dark {
         border-color: #1f3c67!important;
       }
+      .voter-profile .card-header button:after {
+        font-family: 'FontAwesome';  
+        content: "\f102";
+        color: #fff;
+      }
+      .voter-profile .card-header button.collapsed:after {
+        content: "\f103";
+        color: #fff;
+      }
     </style>
   </head>
   <body>
-    <div class="container-fluid p-0 mb-2">
-      <ul class="nav nav-bg">
-        <?php if ($PROFILE) { ?>
+    <div class="container p-0 mb-2">
+      <ul class="nav bg-success">
         <li class="nav-item">
-          <a class="nav-link text-light" href="<?= get_this_url() ?>">
-            <i class="fas fa-university"></i> State Races
-          </a>
-        </li>
-        <?php } ?>
-        <li class="nav-item"><!-- TODO drop? -->
           <a class="nav-link text-light" href="<?= get_this_url() ?>">Lookup by Address</a>
         </li>
       </ul>
+      <?php if ($PROFILE) { ?>
+      <div class="row p-2">
+       <div class="col"><?= htmlspecialchars($_GET['address']) ?></div>
+      </div>
+      <?php } ?>
     </div>
-    <div class="container">
 
   <?php if ($PROFILE) { ?>
+  <div class="voter-profile">
+    <!-- toggle-able section -->
+    <div class="card">
+      <div class="card-header nav-bg text-light" id="fed-races-header">
+        <h3 class="mb-0">
+          <i class="fas fa-university"></i> Federal Races
+          <button class="btn btn-link float-right collapsed" data-toggle="collapse" data-target="#fed-races" aria-expanded="true" aria-controls="fed-races"></button>
+        </h3>
+      </div>
 
-    <div class="h2">
-      State Senate #<?= get_sd() ?>
-    </div>
+      <div id="fed-races" class="collapse" aria-labelledby="fed-races-header" data-parent="#voter-profile">
+        <div class="card-body">
+          <div class="h2">Congressional District #<?= get_cd() ?></div>
+          <?php $candidates = get_congressional_candidates($PROFILE); include __DIR__ . '/candidates-layout.php'; ?>
+        </div>
+      </div>
+    </div><!-- card -->
 
-    <?php $candidates = get_senate_candidates($PROFILE); include __DIR__ . '/candidates-layout.php'; ?>
+    <div class="card">
+      <div class="card-header nav-bg text-light" id="state-races-header">
+        <h3 class="mb-0">
+          <i class="fas fa-university"></i> State Races
+          <button class="btn btn-link float-right" data-toggle="collapse" data-target="#state-races" aria-expanded="true" aria-controls="state-races"></button>
+        </h3>
+      </div>
 
-    <div class="h2 mt-4">
-      State House #<?= get_hd() ?>
-    </div>
+      <div id="state-races" class="collapse show" aria-labelledby="state-races-header" data-parent="#voter-profile">
+        <div class="card-body">
+          <div class="h2">State Senate #<?= get_sd() ?></div>
+          <?php $candidates = get_senate_candidates($PROFILE); include __DIR__ . '/candidates-layout.php'; ?>
 
-    <?php $candidates = get_house_candidates($PROFILE); include __DIR__ . '/candidates-layout.php'; ?>
+          <div class="h2 mt-4">State House #<?= get_hd() ?></div>
+          <?php $candidates = get_house_candidates($PROFILE); include __DIR__ . '/candidates-layout.php'; ?>
+        </div>
+      </div>
+    </div><!-- card -->
 
 <!--
     <small>
@@ -95,8 +133,10 @@
     </pre>
     </small>
 -->
+  </div><!-- #voter-profile -->
 
   <?php } else { ?>
+   <div class="container">
     <h1>Voter Guide</h1>
     <div class="address-form">
       <form action="<?php print get_this_url() ?>" method="GET">
@@ -112,6 +152,7 @@
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
     </div>
+   </div>
   <?php } ?>
 
     <!-- Optional JavaScript -->
@@ -184,7 +225,5 @@
     </script>
     <script defer src="https://maps.googleapis.com/maps/api/js?key=<?= $_ENV['GOOGLE_PLACES_API_KEY'] ?>&libraries=places&callback=initAutocomplete"></script>
   <?php } ?>
-
-    </div><!-- container -->
   </body>
 </html>
