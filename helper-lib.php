@@ -122,8 +122,15 @@ function get_candidate_info($senate_district, $house_district) {
     'base'    => $_ENV['AIRTABLE_BASE_ID']
   ));
 
+  $filters = array(
+    "State Representative District $house_district",
+    "State Senate District $senate_district",
+  );
+
+  $mapper = function($filter) { return "Race = '$filter'"; };
+
   $params = array(
-    'filterByFormula' => "OR( Race = 'State House District $house_district', Race = 'State Senate District $senate_district' )"
+    'filterByFormula' => sprintf("OR( %s )", implode(',', array_map($mapper, $filters))),
   );
 
   //error_log(var_export($params, true));
@@ -160,7 +167,7 @@ function get_senate_candidates($profile) {
 function get_house_candidates($profile) {
   $house = array();
   foreach($profile as $candidate) {
-    if ($candidate->{'fields'}->{'Chamber'} == 'State House') {
+    if ($candidate->{'fields'}->{'Chamber'} == 'State Representative') {
       array_push($house, $candidate);
     }
   }
