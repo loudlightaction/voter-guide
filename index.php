@@ -9,25 +9,26 @@
 
   $PROFILE = null; # if we have appropriate params, we'll define it.
 
-  if (array_key_exists('address', $_GET) && !array_key_exists('hd', $_GET)) { 
+  if (array_key_exists('address', $_GET) && strlen($_GET['address']) && !array_key_exists('hd', $_GET)) {
     // perform Google Civic API lookup and redirect with ?sd=X&hd=Y
     $address = $_GET['address'];
     $zipcode = $_GET['zipcode'];
     $voter_info = get_voter_info($address, $zipcode);
 
-    if ($zipcode && strpos($address, $zipcode)) {
-      $voter_info['address'] = $address;
-    } else {
-      $voter_info['address'] = "$address $zipcode";
+    if ($voter_info) {
+      if ($zipcode && strpos($address, $zipcode)) {
+        $voter_info['address'] = $address;
+      } else {
+        $voter_info['address'] = "$address $zipcode";
+      }
+
+      $redirect_url = sprintf("%s?%s", get_this_url(), http_build_query($voter_info));
+
+      header('Location: ' . $redirect_url);
+      error_log("Redirecting to $redirect_url");
+      print "Redirecting to $redirect_url";
+      exit(0);
     }
-
-    $redirect_url = sprintf("%s?%s", get_this_url(), http_build_query($voter_info));
-
-    header('Location: ' . $redirect_url);
-    error_log("Redirecting to $redirect_url");
-    print "Redirecting to $redirect_url";
-    exit(0);
-
   }
 
   if (array_key_exists('sd', $_GET) && array_key_exists('hd', $_GET)) {
@@ -75,12 +76,15 @@
       }
       .Democratic {
         color: #0015BC;
+        border-color: #0015BC!important;
       }
       .Republican {
         color: #E9141D;
+        border-color: #E9141D!important;
       }
       .Libertarian {
         color: #E5C601;
+        border-color: #E5C601!important;
       }
     </style>
   </head>
@@ -91,13 +95,13 @@
       </div>
     </div>
     <?php if ($PROFILE) { ?>
-    <div class="container-fluid bg-info pt-2">
+    <div class="container-fluid border border-light bg-light pt-2">
       <div class="row">
         <div class="col">
-          <a class="h4 text-light" href="<?= get_this_url() ?>">Lookup by Address</a>
+          <a class="h4" href="<?= get_this_url() ?>">Lookup by Address</a>
         </div>
       </div>
-      <div class="row p-2 text-light">
+      <div class="row p-2">
         <div class="col"><?= htmlspecialchars($_GET['address']) ?></div>
       </div>
     </div>
@@ -152,7 +156,7 @@
   </div><!-- #voter-profile -->
 
   <div class="container text-center mt-2 mb-2">
-    <a class="btn btn-secondary" href="<?= get_this_url() ?>">Lookup another address</a>
+    <a class="btn btn-outline-dark" href="<?= get_this_url() ?>">Lookup another address</a>
   </div>
 
   <?php } else { ?>
@@ -168,7 +172,7 @@
           <label for="zipcode">ZIP Code</label>
           <input type="text" name="zipcode" class="form-control" id="zipcode" placeholder="12345">
         </div>
-        <button type="submit" class="btn btn-secondary">Submit</button>
+        <button type="submit" class="btn btn-outline-dark">Submit</button>
       </form>
     </div>
    </div>
