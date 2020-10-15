@@ -9,7 +9,7 @@
 
   $PROFILE = null; # if we have appropriate params, we'll define it.
 
-  if (array_key_exists('address', $_GET) && strlen($_GET['address']) && !array_key_exists('hd', $_GET)) {
+  if (array_key_exists('address', $_GET) && strlen($_GET['address']) && !array_key_exists('cd', $_GET)) {
     // perform Google Civic API lookup and redirect with ?sd=X&hd=Y
     $address = $_GET['address'];
     $zipcode = $_GET['zipcode'];
@@ -31,7 +31,7 @@
     }
   }
 
-  if (array_key_exists('sd', $_GET) && array_key_exists('hd', $_GET)) {
+  if (array_key_exists('cd', $_GET)) {
     // lookup Airtable details, caching if found
     $PROFILE = get_candidate_info(get_sd(), get_hd(), get_cd());
     $QUESTIONS = get_candidate_questions();
