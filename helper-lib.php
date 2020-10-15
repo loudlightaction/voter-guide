@@ -17,6 +17,20 @@ function force_ssl_in_production() {
   }
 }
 
+function force_hostname() {
+  if (isset($_ENV['FORCE_HOSTNAME']) && $_SERVER['HTTP_HOST'] != $_ENV['FORCE_HOSTNAME']) {
+    if (!headers_sent()) {
+      header("Status: 301 Moved Permanently");
+      header(sprintf(
+          'Location: https://%s%s',
+          $_ENV['FORCE_HOSTNAME'],
+          $_SERVER['REQUEST_URI']
+      ));
+      exit();
+    }
+  }
+}
+
 function init_env() {
   if (file_exists(__DIR__ . '/.env')) {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
@@ -34,7 +48,7 @@ function get_url($str) {
 function get_scheme() {
   $scheme = 'http';
   if (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS'] == 'on') {
-    $scheme .= 's';
+    $scheme = 'https';
   }
   if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
     $scheme = 'https';
@@ -46,7 +60,7 @@ function get_this_url($scheme=null) {
   if (!$scheme) { $scheme = get_scheme(); }
   return sprintf("%s://%s%s",
     $scheme,
-    $_SERVER['SERVER_NAME'],
+    $_SERVER['HOST_NAME'],
     $_SERVER['PHP_SELF']);
 }
 
