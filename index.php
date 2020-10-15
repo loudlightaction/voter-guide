@@ -16,6 +16,9 @@
     $voter_info = get_voter_info($address, $zipcode);
 
     if ($voter_info) {
+      // if Google did not have state leg info, try again with openstates
+      get_openstates_via_geo($voter_info, $_GET['lat'], $_GET['lng']);
+
       if ($zipcode && strpos($address, $zipcode)) {
         $voter_info['a'] = base64_encode($address);
       } else {
@@ -25,7 +28,7 @@
       $redirect_url = sprintf("%s?%s", get_this_url(), http_build_query($voter_info));
 
       header('Location: ' . $redirect_url);
-      error_log("Redirecting to $redirect_url");
+      //error_log("Redirecting to $redirect_url");
       print "Redirecting to $redirect_url";
       exit(0);
     }
@@ -173,6 +176,8 @@
         <div class="form-group">
           <label for="address">Street Address</label>
           <input type="text" name="address" class="form-control" id="address" aria-describedby="addressHelp" placeholder="123 Main Street">
+          <input type="hidden" id="lat" name="lat" value="">
+          <input type="hidden" id="lng" name="lng" value="">
           <small id="addressHelp" class="form-text text-muted">The address where you are registered to vote</small>
         </div>
         <div class="form-group">
@@ -225,7 +230,7 @@
         );
         // Avoid paying for data that you don't need by restricting the set of
         // place fields that are returned to just the address components.
-        autocomplete.setFields(["address_component"]);
+        autocomplete.setFields(["address_component", "geometry"]);
         // When the user selects an address from the drop-down, populate the
         // address fields in the form.
         autocomplete.addListener("place_changed", fillInAddress);
@@ -234,6 +239,9 @@
       function fillInAddress() {
         // Get the place details from the autocomplete object.
         const place = autocomplete.getPlace();
+
+        document.getElementById('lat').value = place.geometry.location.lat();
+        document.getElementById('lng').value = place.geometry.location.lng();
 
         // Get each component of the address from the place details,
         // and then fill-in the corresponding field on the form.

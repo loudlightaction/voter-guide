@@ -95,6 +95,30 @@ function get_voter_info($address, $zipcode) {
   return $voter_info;
 }
 
+function get_openstates_via_geo(&$voter_info, $lat, $lng) {
+  //error_log("lat=$lat lng=$lng");
+
+  // TODO figure out how to cache this?
+
+  $api_url = sprintf(
+    'https://v3.openstates.org/people.geo?lat=%s&lng=%s&apikey=%s',
+    $lat, $lng, $_ENV['OPENSTATES_API_KEY']
+  );
+
+  $response = Requests::get($api_url, array('Content-Type' => 'application/json'));
+  //error_log(var_export($response->body, true));
+  $resp = json_decode($response->body, true);
+
+  foreach($resp['results'] as $r) {
+    if ($r['current_role']['org_classification'] == 'lower') {
+      $voter_info['hd'] = $r['current_role']['district'];
+    } elseif ($r['current_role']['org_classification'] == 'upper') {
+      $voter_info['sd'] = $r['current_role']['district'];
+    }
+  }
+  return $voter_info;
+}
+
 // ?? create global var $REDIS_CLIENT
 use RedisClient\RedisClient;
 use RedisClient\Client\Version\RedisClient2x6;
