@@ -155,6 +155,7 @@ function get_candidate_info($senate_district, $house_district, $cong_district) {
 
   $params = array(
     'filterByFormula' => sprintf("OR( %s )", implode(',', array_map($mapper, $filters))),
+    'sort' => array(array('field' => 'last name', 'direction' => "asc")),
   );
 
   //error_log(var_export($params, true));
