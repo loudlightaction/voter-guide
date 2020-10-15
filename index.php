@@ -252,6 +252,6 @@
     <script defer src="https://maps.googleapis.com/maps/api/js?key=<?= $_ENV['GOOGLE_PLACES_API_KEY'] ?>&libraries=places&callback=initAutocomplete"></script>
   <?php } ?>
 
-  <?php if ($_ENV['DEBUG']) { print "<small><pre>" . var_export($_SERVER, true) . "</pre></small>" }
+  <?php if ($_ENV['DEBUG']) { print "<small><pre>" . var_export($_SERVER, true) . "</pre></small>"; } ?>
   </body>
 </html>
