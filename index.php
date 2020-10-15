@@ -151,7 +151,7 @@
   </div>
 
   <?php } else { ?>
-   <div class="container mt-2">
+   <div class="container mt-2 mb-4">
     <div class="address-form">
       <form action="<?php print get_this_url() ?>" method="GET">
         <div class="form-group">
