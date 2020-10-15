@@ -5,6 +5,7 @@
 
   init_env();
   force_ssl_in_production();
+  force_hostname(); // checks FORCE_HOSTNAME env var
 
   $PROFILE = null; # if we have appropriate params, we'll define it.
 
