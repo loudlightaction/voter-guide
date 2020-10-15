@@ -123,10 +123,10 @@
           <div class="h2">President</div>
           <?php $candidates = get_president_candidates($PROFILE); include __DIR__ . '/candidates-layout.php'; ?>
 
-          <div class="h2">U.S. Senate</div>
+          <div class="h2 mt-4">U.S. Senate</div>
           <?php $candidates = get_us_senate_candidates($PROFILE); include __DIR__ . '/candidates-layout.php'; ?>
 
-          <div class="h2">U.S. Congressional District #<?= get_cd() ?></div>
+          <div class="h2 mt-4">U.S. Congressional District #<?= get_cd() ?></div>
           <?php $candidates = get_congressional_candidates($PROFILE); include __DIR__ . '/candidates-layout.php'; ?>
         </div>
       </div>

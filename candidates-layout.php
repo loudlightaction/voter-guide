@@ -9,7 +9,7 @@
       <?php } ?>
     </div>
     <div class="col name">
-      <div class="h3 name"><?= $candidate->{'fields'}->{'Name'} ?></div>
+      <div class="h4 name"><?= $candidate->{'fields'}->{'Name'} ?></div>
       <div class="mt-1 text-secondary party"><?= $candidate->{'fields'}->{'Party'} ?></div>
       <?php if (isset($candidate->{'fields'}->{'Website'})) { ?>
       <div class="mt-1 website">
