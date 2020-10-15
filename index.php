@@ -187,7 +187,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-  <?php if (!$PROFILE && array_key_exists($_ENV, 'GOOGLE_PLACES_API_KEY')) { ?>
+  <?php if (!$PROFILE && array_key_exists('GOOGLE_PLACES_API_KEY', $_ENV)) { ?>
     <!-- address autocomplete -->
     <script type="text/javascript">
       // This sample uses the Autocomplete widget to help the user select a
@@ -251,5 +251,7 @@
     </script>
     <script defer src="https://maps.googleapis.com/maps/api/js?key=<?= $_ENV['GOOGLE_PLACES_API_KEY'] ?>&libraries=places&callback=initAutocomplete"></script>
   <?php } ?>
+
+  <?php if ($_ENV['DEBUG']) { print "<small><pre>" . var_export($_SERVER, true) . "</pre></small>" }
   </body>
 </html>
