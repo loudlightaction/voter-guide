@@ -2,7 +2,11 @@
 <?php foreach($candidates as $candidate) { ?>
   <div class="row candidate border-bottom border-dark mt-3 pb-3">
     <div class="col-3 headshot">
+      <?php if ($candidate->{'fields'}->{'Photo'}[0]->{'thumbnails'}->{'large'}->{'url'}) { ?>
       <img class="rounded img-fluid" src="<?= $candidate->{'fields'}->{'Photo'}[0]->{'thumbnails'}->{'large'}->{'url'} ?>" />
+      <?php } else { ?>
+      <i class="far fa-address-card fa-4x <?= $candidate->{'fields'}->{'Party'} ?>"></i>
+      <?php } ?>
     </div>
     <div class="col name">
       <div class="h3 name"><?= $candidate->{'fields'}->{'Name'} ?></div>
@@ -26,6 +30,14 @@
 <?php foreach($QUESTIONS as $field => $question) {
   if (strlen($question) == 0) { continue; }
   // TODO check if any answers exist for any candidate and skip otherwise
+  $answers_exist = false;
+  foreach($candidates as $c) {
+    if (strlen($c->{'fields'}->{$field})) {
+      $answers_exist = true;
+      break;
+    }
+  }
+  if (!$answers_exist) { continue; }
 ?>
 <div class="row">
  <div class="container-fluid issue mt-3 border-bottom border-dark pb-3">
@@ -37,10 +49,14 @@
   <?php foreach($candidates as $candidate) { ?>
   <div class="row candidate align-items-center">
     <div class="col-2">
+      <?php if ($candidate->{'fields'}->{'Photo'}[0]->{'thumbnails'}->{'small'}->{'url'}) { ?>
       <img class="img-thumbnail" src="<?= $candidate->{'fields'}->{'Photo'}[0]->{'thumbnails'}->{'small'}->{'url'} ?>" />
+      <?php } else { ?>
+      <i class="far fa-address-card fa-2x <?= $candidate->{'fields'}->{'Party'} ?>"></i>
+      <?php } ?>
     </div>
     <div class="col">
-      <?= $candidate->{'fields'}->{'Name'} ?>
+      <?= $candidate->{'fields'}->{'last name'} ?>
     </div>
     <div class="col">
       <?= $candidate->{'fields'}->{$field} ?>

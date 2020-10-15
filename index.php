@@ -53,7 +53,7 @@
     <!-- icons -->
     <script src="https://kit.fontawesome.com/858b4d9129.js" crossorigin="anonymous"></script>
 
-    <title>Kansas Voter Guide</title>
+    <title>Kansas <?= $_ENV['ELECTION_YEAR'] || '2020' ?> Voter Guide</title>
 
     <style>
       .nav-bg {
@@ -71,26 +71,32 @@
         content: "\f103";
         color: #fff;
       }
+      .Democratic {
+        color: blue;
+      }
+      .Republican {
+        color: red;
+      }
     </style>
   </head>
   <body>
     <div class="container-fluid nav-bg">
       <div class="text-light p-2">
-        <h1 class="text-center">Kansas 2020 Voter Guide</h1>
+        <div class="h1 text-center">Kansas <?= $_ENV['ELECTION_YEAR'] ?><br/>Voter Guide</div>
       </div>
     </div>
+    <?php if ($PROFILE) { ?>
     <div class="container-fluid bg-info pt-2">
       <div class="row">
         <div class="col">
           <a class="h4 text-light" href="<?= get_this_url() ?>">Lookup by Address</a>
         </div>
       </div>
-      <?php if ($PROFILE) { ?>
       <div class="row p-2 text-light">
         <div class="col"><?= htmlspecialchars($_GET['address']) ?></div>
       </div>
-      <?php } ?>
     </div>
+    <?php } ?>
 
   <?php if ($PROFILE) { ?>
   <div class="voter-profile">
@@ -140,9 +146,12 @@
 -->
   </div><!-- #voter-profile -->
 
+  <div class="container text-center mt-2 mb-2">
+    <a class="btn btn-primary" href="<?= get_this_url() ?>">Lookup another address</a>
+  </div>
+
   <?php } else { ?>
-   <div class="container">
-    <h1>Voter Guide</h1>
+   <div class="container mt-2">
     <div class="address-form">
       <form action="<?php print get_this_url() ?>" method="GET">
         <div class="form-group">
@@ -161,13 +170,13 @@
   <?php } ?>
 
   <footer>
-    <div class="container-fluid">
+    <div class="container-fluid mt-2">
       <div class="row nav-bg">
         <div class="col text-center p-2">
-          <div><a class="text-light" href="">Voting Locations</a></div>
-          <div><a class="text-light" href="">Check Voter Registration</a></div>
-          <div><a class="text-light" href="">Issue Stances Details</a></div>
-          <div class="font-italic"><a class="text-light" href="">A project of Loud Light Civic Action</a></div>
+          <div><a class="text-light" href="https://www.ksvotes.org/r/ksvoterguide">Voting Location</a></div>
+          <div><a class="text-light" href="https://www.ksvotes.org/r/ksvoterguide">Check Voter Registration</a></div>
+          <div><a class="text-light" href="#">Issue Stances Details</a></div>
+          <div class="font-italic"><a class="text-light" href="https://loudlightaction.org/">A project of Loud Light Civic Action</a></div>
         </div>
       </div>
   </footer>
