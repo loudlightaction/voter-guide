@@ -72,10 +72,13 @@
         color: #fff;
       }
       .Democratic {
-        color: blue;
+        color: #0015BC;
       }
       .Republican {
-        color: red;
+        color: #E9141D;
+      }
+      .Libertarian {
+        color: #E5C601;
       }
     </style>
   </head>
