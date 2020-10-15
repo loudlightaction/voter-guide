@@ -51,7 +51,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <!-- icons -->
-    <script src="https://kit.fontawesome.com/858b4d9129.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/858b4d9129.js" crossorigin="anonymous" SameSite="none Secure"></script>
 
     <title>Kansas <?= $_ENV['ELECTION_YEAR'] || '2020' ?> Voter Guide</title>
 
