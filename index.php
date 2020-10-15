@@ -17,9 +17,9 @@
 
     if ($voter_info) {
       if ($zipcode && strpos($address, $zipcode)) {
-        $voter_info['address'] = $address;
+        $voter_info['a'] = base64_encode($address);
       } else {
-        $voter_info['address'] = "$address $zipcode";
+        $voter_info['a'] = base64_encode("$address $zipcode");
       }
 
       $redirect_url = sprintf("%s?%s", get_this_url(), http_build_query($voter_info));
@@ -102,7 +102,7 @@
         </div>
       </div>
       <div class="row p-2">
-        <div class="col"><?= htmlspecialchars($_GET['address']) ?></div>
+        <div class="col"><?= htmlspecialchars(base64_decode($_GET['a'])) ?></div>
       </div>
     </div>
     <?php } ?>

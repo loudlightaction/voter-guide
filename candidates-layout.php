@@ -12,7 +12,11 @@
       <div class="h3 name"><?= $candidate->{'fields'}->{'Name'} ?></div>
       <div class="mt-1 text-secondary party"><?= $candidate->{'fields'}->{'Party'} ?></div>
       <?php if ($candidate->{'fields'}->{'Website'}) { ?>
-      <div class="mt-1 website"><a href="<?= get_url($candidate->{'fields'}->{'Website'}) ?>"><i class="fas fa-external-link-alt"></i> website</a></div>
+      <div class="mt-1 website">
+        <a target="_blank" href="<?= get_url($candidate->{'fields'}->{'Website'}) ?>">
+          <i class="fas fa-external-link-alt"></i> website
+        </a>
+      </div>
       <?php } ?>
       <?php if ($candidate->{'fields'}->{'Endorsed By'}) { ?>
       <div class="mt-3 endorsements">
