@@ -58,7 +58,8 @@
 
     <style>
       .nav-bg {
-        background-color: #1f3c67!important;
+        background-color: #111!important;
+        /* background-color: #1f3c67!important; */
       }
       .border-dark {
         border-color: #1f3c67!important;
@@ -151,7 +152,7 @@
   </div><!-- #voter-profile -->
 
   <div class="container text-center mt-2 mb-2">
-    <a class="btn btn-primary" href="<?= get_this_url() ?>">Lookup another address</a>
+    <a class="btn btn-secondary" href="<?= get_this_url() ?>">Lookup another address</a>
   </div>
 
   <?php } else { ?>
@@ -167,7 +168,7 @@
           <label for="zipcode">ZIP Code</label>
           <input type="text" name="zipcode" class="form-control" id="zipcode" placeholder="12345">
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-secondary">Submit</button>
       </form>
     </div>
    </div>
