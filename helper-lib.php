@@ -147,6 +147,8 @@ function get_candidate_info($senate_district, $house_district, $cong_district) {
     "State Representative District $house_district",
     "State Senate District $senate_district",
     "U.S. Representative District $cong_district",
+    "U.S. Senate",
+    "President",
   );
 
   $mapper = function($filter) { return "Race = '$filter'"; };
@@ -182,32 +184,32 @@ function get_cd() {
   }
 }
 
-function get_senate_candidates($profile) {
-  $senate = array();
+function get_matching_candidates($profile, $chamber) {
+  $m = array();
   foreach($profile as $candidate) {
-    if ($candidate->{'fields'}->{'Chamber'} == 'State Senate') {
-      array_push($senate, $candidate);
+    if ($candidate->{'fields'}->{'Chamber'} == $chamber) {
+      array_push($m, $candidate);
     }
   }
-  return $senate;
+  return $m;
+}
+
+function get_senate_candidates($profile) {
+  return get_matching_candidates($profile, 'State Senate');
 }
 
 function get_house_candidates($profile) {
-  $house = array();
-  foreach($profile as $candidate) {
-    if ($candidate->{'fields'}->{'Chamber'} == 'State Representative') {
-      array_push($house, $candidate);
-    }
-  }
-  return $house;
+  return get_matching_candidates($profile, 'State Representative');
 }
 
 function get_congressional_candidates($profile) {
-  $cong = array();
-  foreach($profile as $candidate) {
-    if ($candidate->{'fields'}->{'Chamber'} == 'U.S. Representative') {
-      array_push($cong, $candidate);
-    }
-  }
-  return $cong;
+  return get_matching_candidates($profile, 'U.S. Representative');
+}
+
+function get_president_candidates($profile) {
+  return get_matching_candidates($profile, 'President');
+}
+
+function get_us_senate_candidates($profile) {
+  return get_matching_candidates($profile, 'U.S. Senate');
 }

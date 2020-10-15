@@ -120,7 +120,13 @@
 
       <div id="fed-races" class="collapse" aria-labelledby="fed-races-header" data-parent="#voter-profile">
         <div class="card-body">
-          <div class="h2">Congressional District #<?= get_cd() ?></div>
+          <div class="h2">President</div>
+          <?php $candidates = get_president_candidates($PROFILE); include __DIR__ . '/candidates-layout.php'; ?>
+
+          <div class="h2">U.S. Senate</div>
+          <?php $candidates = get_us_senate_candidates($PROFILE); include __DIR__ . '/candidates-layout.php'; ?>
+
+          <div class="h2">U.S. Congressional District #<?= get_cd() ?></div>
           <?php $candidates = get_congressional_candidates($PROFILE); include __DIR__ . '/candidates-layout.php'; ?>
         </div>
       </div>
@@ -145,14 +151,15 @@
       </div>
     </div><!-- card -->
 
-<!--
+    <?php if ($_ENV['DEBUG']) { ?>
     <small>
     <pre>
     <?php print_r($PROFILE) ?>
     <?php print_r($QUESTIONS) ?>
     </pre>
     </small>
--->
+    <?php } ?>
+
   </div><!-- #voter-profile -->
 
   <div class="container text-center mt-2 mb-2">
