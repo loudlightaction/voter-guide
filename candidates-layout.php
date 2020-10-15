@@ -2,7 +2,7 @@
 <?php foreach($candidates as $candidate) { ?>
   <div class="row candidate border-bottom border-dark mt-3 pb-3">
     <div class="col-3 headshot">
-      <?php if ($candidate->{'fields'}->{'Photo'}[0]->{'thumbnails'}->{'large'}->{'url'}) { ?>
+      <?php if (isset($candidate->{'fields'}->{'Photo'}[0]->{'thumbnails'}->{'large'}->{'url'})) { ?>
       <img class="img-thumbnail <?= $candidate->{'fields'}->{'Party'} ?>" src="<?= $candidate->{'fields'}->{'Photo'}[0]->{'thumbnails'}->{'large'}->{'url'} ?>" />
       <?php } else { ?>
       <i class="far fa-address-card fa-4x <?= $candidate->{'fields'}->{'Party'} ?>"></i>
@@ -11,14 +11,14 @@
     <div class="col name">
       <div class="h3 name"><?= $candidate->{'fields'}->{'Name'} ?></div>
       <div class="mt-1 text-secondary party"><?= $candidate->{'fields'}->{'Party'} ?></div>
-      <?php if ($candidate->{'fields'}->{'Website'}) { ?>
+      <?php if (isset($candidate->{'fields'}->{'Website'})) { ?>
       <div class="mt-1 website">
         <a target="_blank" href="<?= get_url($candidate->{'fields'}->{'Website'}) ?>">
           <i class="fas fa-external-link-alt"></i> website
         </a>
       </div>
       <?php } ?>
-      <?php if ($candidate->{'fields'}->{'Endorsed By'}) { ?>
+      <?php if (isset($candidate->{'fields'}->{'Endorsed By'})) { ?>
       <div class="mt-3 endorsements">
         <div class="h6">Endorsements</div>
         <?php foreach($candidate->{'fields'}->{'Endorsed By'} as $endorsement) { ?>
@@ -36,7 +36,7 @@
   // TODO check if any answers exist for any candidate and skip otherwise
   $answers_exist = false;
   foreach($candidates as $c) {
-    if (strlen($c->{'fields'}->{$field})) {
+    if (isset($c->{'fields'}->{$field}) && strlen($c->{'fields'}->{$field})) {
       $answers_exist = true;
       break;
     }
@@ -53,7 +53,7 @@
   <?php foreach($candidates as $candidate) { ?>
   <div class="row mb-2 candidate align-items-center">
     <div class="col-2">
-      <?php if ($candidate->{'fields'}->{'Photo'}[0]->{'thumbnails'}->{'small'}->{'url'}) { ?>
+      <?php if (isset($candidate->{'fields'}->{'Photo'}[0]->{'thumbnails'}->{'small'}->{'url'})) { ?>
       <img class="img-thumbnail <?= $candidate->{'fields'}->{'Party'} ?>" src="<?= $candidate->{'fields'}->{'Photo'}[0]->{'thumbnails'}->{'small'}->{'url'} ?>" />
       <?php } else { ?>
       <i class="far fa-address-card fa-2x <?= $candidate->{'fields'}->{'Party'} ?>"></i>
