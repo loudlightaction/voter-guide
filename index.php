@@ -70,7 +70,7 @@
     </script>
     <?php } ?>
 
-    <title>Kansas <?= $_ENV['ELECTION_YEAR'] || '2020' ?> Voter Guide</title>
+    <title>Kansas <?= $_ENV['ELECTION_YEAR'] ?> Voter Guide</title>
 
     <style>
       .nav-bg {
