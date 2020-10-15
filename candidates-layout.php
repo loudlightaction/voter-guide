@@ -13,7 +13,7 @@
       <div class="mt-1 text-secondary party"><?= $candidate->{'fields'}->{'Party'} ?></div>
       <?php if (isset($candidate->{'fields'}->{'Website'})) { ?>
       <div class="mt-1 website">
-        <a target="_blank" href="<?= get_url($candidate->{'fields'}->{'Website'}) ?>">
+        <a class="text-muted font-weight-bold" target="_blank" href="<?= get_url($candidate->{'fields'}->{'Website'}) ?>">
           <i class="fas fa-external-link-alt"></i> website
         </a>
       </div>
