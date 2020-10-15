@@ -36,7 +36,7 @@ function get_scheme() {
   if (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS'] == 'on') {
     $scheme .= 's';
   }
-  if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == "http") {
+  if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
     $scheme = 'https';
   }
   return $scheme;
