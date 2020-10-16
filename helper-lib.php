@@ -157,7 +157,10 @@ function get_candidate_questions() {
     }
     $questions[$f->{'fields'}->{'Name'}] = $f->{'fields'}->{'question'};
   }
-  $redis->set('questions', json_encode($questions), 3600); // TTL 1 hour
+  if (count($questions) > 0) {
+    $ttl = isset($_ENV['QUESTION_CACHE_TTL']) ? $_ENV['QUESTION_CACHE_TTL'] : 3600;
+    $redis->set('questions', json_encode($questions), $ttl);
+  }
   return $questions;
 }
 

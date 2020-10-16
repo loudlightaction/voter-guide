@@ -36,7 +36,7 @@
   // TODO check if any answers exist for any candidate and skip otherwise
   $answers_exist = false;
   foreach($candidates as $c) {
-    if (isset($c->{'fields'}->{$field}) && strlen($c->{'fields'}->{$field})) {
+    if (isset($c->{'fields'}->{$field}) && $c->{'fields'}->{$field}) {
       $answers_exist = true;
       break;
     }
@@ -63,7 +63,11 @@
       <?= $candidate->{'fields'}->{'last name'} ?>
     </div>
     <div class="col">
+     <?php if (is_string($candidate->{'fields'}->{$field})) { ?>
       <?= $candidate->{'fields'}->{$field} ?>
+     <?php } else { ?>
+      <?= $candidate->{'fields'}->{$field}[0] ?>
+     <?php } ?>
     </div>
   </div>
   <?php } ?>
