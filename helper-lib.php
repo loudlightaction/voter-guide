@@ -73,8 +73,11 @@ function get_voter_info($address, $zipcode) {
   );
 
 //  error_log("api url: $api_url");
+  $options = array(
+    'timeout' => 2.5,
+  );
 
-  $response = Requests::get($api_url, array('Content-Type' => 'application/json'));
+  $response = Requests::get($api_url, array('Content-Type' => 'application/json'), $options);
 
 //  error_log(var_export($response, true));
 //  error_log(var_export($response->body, true));
@@ -105,7 +108,11 @@ function get_openstates_via_geo(&$voter_info, $lat, $lng) {
     $lat, $lng, $_ENV['OPENSTATES_API_KEY']
   );
 
-  $response = Requests::get($api_url, array('Content-Type' => 'application/json'));
+  $options = array(
+    'timeout' => 2.5,
+  );
+
+  $response = Requests::get($api_url, array('Content-Type' => 'application/json'), $options);
   //error_log(var_export($response->body, true));
   $resp = json_decode($response->body, true);
 

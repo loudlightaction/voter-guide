@@ -40,7 +40,10 @@
     $QUESTIONS = get_candidate_questions();
 
     if (!$PROFILE) {
-      $PROFILE = array('error' => "We're sorry, we could not locate candidates for Senate District $sd and House District $hd");
+      $ERROR = sprintf(
+        "We're sorry, we could not locate candidates for Senate District %s and House District %s. Please try again later.",
+        get_sd(), get_hd()
+      );
     }
   }
 ?>
@@ -186,6 +189,9 @@
 
   <?php } else { ?>
    <div class="container mt-2 mb-4">
+    <?php if ($ERROR) { ?>
+    <div class="alert alert-danger" role="alert"><?= $ERROR ?></div>
+    <?php } ?>
     <div class="address-form">
       <form action="<?php print get_this_url() ?>" method="GET">
         <div class="form-group">
