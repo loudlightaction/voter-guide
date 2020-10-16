@@ -58,7 +58,7 @@
     <!-- icons -->
     <script src="https://kit.fontawesome.com/858b4d9129.js" crossorigin="anonymous" SameSite="none Secure"></script>
 
-    <?php if ($_ENV['GOOGLE_TAG_MANAGER']) { ?>
+    <?php if (isset($_ENV['GOOGLE_TAG_MANAGER'])) { ?>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=<?= $_ENV['GOOGLE_TAG_MANAGER'] ?>"></script>
     <script>
@@ -100,6 +100,9 @@
       .Libertarian {
         color: #E5C601;
         border-color: #E5C601!important;
+      }
+      .question {
+        font-weight: bold;
       }
     </style>
   </head>
