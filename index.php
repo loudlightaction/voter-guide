@@ -30,7 +30,7 @@
       $redirect_url = sprintf("%s?%s", get_this_url(), http_build_query($voter_info));
 
       header('Location: ' . $redirect_url);
-      error_log("Redirecting to $redirect_url");
+      //error_log("Redirecting to $redirect_url");
       print "Redirecting to $redirect_url";
       exit(0);
     }
