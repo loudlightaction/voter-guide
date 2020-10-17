@@ -82,7 +82,7 @@ function get_voter_info($address, $zipcode) {
 //  error_log(var_export($response, true));
 //  error_log(var_export($response->body, true));
 
-  $voter_info = array('sbe' => 'null');  // google does not seem to return SBE
+  $voter_info = array();
   $resp = json_decode($response->body, true);
 
   //error_log(var_export($resp['divisions'], true));
@@ -234,9 +234,27 @@ function get_county() {
 }
 
 function get_sbe() {
-  if (preg_match("/^\d+$/", $_GET['sbe'])) {
-    return $_GET['sbe'];
+  # senate district => sbe district
+  $sbe2sd = array(
+    '1' => array(3, 4, 5, 6),
+    '2' => array(7, 8, 10, 11),
+    '3' => array(9, 21, 23, 37),
+    '4' => array(2, 18, 19, 20),
+    '5' => array(33, 38, 39, 40),
+    '6' => array(1, 22, 24, 36),
+    '7' => array(17, 31, 34, 35),
+    '8' => array(25, 28, 29, 30),
+    '9' => array(12, 13, 14, 15),
+    '10' => array(16, 26, 27, 32),
+  );
+  $sd2sbe = array();
+  foreach($sbe2sd as $sbe => $sds) {
+    foreach($sds as $sd) {
+      $sd2sbe["$sd"] = $sbe;
+    }
   }
+
+  return $sd2sbe[get_sd()];
 }
 
 function get_district_court() {
