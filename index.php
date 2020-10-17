@@ -184,7 +184,7 @@
     <div class="card">
       <div class="card-header nav-bg text-light" id="local-races-header">
         <h3 class="mb-0">
-          <i class="fas fa-university"></i> State Races
+          <i class="fas fa-university"></i> Local/County Races
           <button class="btn btn-link float-right" data-toggle="collapse" data-target="#local-races" aria-expanded="true" aria-controls="local-races"></button>
         </h3>
       </div>
