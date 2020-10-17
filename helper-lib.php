@@ -82,8 +82,10 @@ function get_voter_info($address, $zipcode) {
 //  error_log(var_export($response, true));
 //  error_log(var_export($response->body, true));
 
-  $voter_info = array();
+  $voter_info = array('sbe' => 'null');  // google does not seem to return SBE
   $resp = json_decode($response->body, true);
+
+  //error_log(var_export($resp['divisions'], true));
 
   foreach(array_keys($resp['divisions']) as $div) {
     if (preg_match("/ocd-division\/country:us\/state:ks\/sldu:(\w+)/", $div, $matches)) {
@@ -92,6 +94,10 @@ function get_voter_info($address, $zipcode) {
       $voter_info['hd'] = $matches[1];
     } elseif (preg_match("/ocd-division\/country:us\/state:ks\/cd:(\w+)/", $div, $matches)) {
       $voter_info['cd'] = $matches[1];
+    } elseif (preg_match("/ocd-division\/country:us\/state:ks\/district_court:(\d+)/", $div, $matches)) {
+      $voter_info['dc'] = $matches[1];
+    } elseif (preg_match("/ocd-division\/country:us\/state:ks\/county:([\w\s]+)$/", $div, $matches)) {
+      $voter_info['c'] = str_replace(' County', '', $resp['divisions'][$div]['name']);
     }
   }
 
@@ -171,7 +177,7 @@ function get_candidate_questions() {
   return $questions;
 }
 
-function get_candidate_info($senate_district, $house_district, $cong_district) {
+function get_candidate_info($senate_district, $house_district, $cong_district, $county, $sbe_district) {
   $airtable = new Airtable(array(
     'api_key' => $_ENV['AIRTABLE_API_KEY'],
     'base'    => $_ENV['AIRTABLE_BASE_ID']
@@ -183,6 +189,8 @@ function get_candidate_info($senate_district, $house_district, $cong_district) {
     "U.S. Representative District $cong_district",
     "U.S. Senate",
     "President",
+    "State Board of Education District $sbe_district",
+    "$county County District Attorney",
   );
 
   $mapper = function($filter) { return "Race = '$filter'"; };
@@ -216,6 +224,24 @@ function get_hd() {
 function get_cd() {
   if (preg_match("/^\d+$/", $_GET['cd'])) {
     return $_GET['cd'];
+  }
+}
+
+function get_county() {
+  if (preg_match("/^[\w\s]+$/", $_GET['c'])) {
+    return $_GET['c'];
+  }
+}
+
+function get_sbe() {
+  if (preg_match("/^\d+$/", $_GET['sbe'])) {
+    return $_GET['sbe'];
+  }
+}
+
+function get_district_court() {
+  if (preg_match("/^\d+$/", $_GET['dc'])) {
+    return $_GET['dc'];
   }
 }
 

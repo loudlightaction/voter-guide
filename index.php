@@ -17,7 +17,9 @@
 
     if ($voter_info) {
       // if Google did not have state leg info, try again with openstates
-      get_openstates_via_geo($voter_info, $_GET['lat'], $_GET['lng']);
+      if (!isset($voter_info['sd'])) {
+        get_openstates_via_geo($voter_info, $_GET['lat'], $_GET['lng']);
+      }
 
       if ($zipcode && strpos($address, $zipcode)) {
         $voter_info['a'] = base64_encode($address);
@@ -28,7 +30,7 @@
       $redirect_url = sprintf("%s?%s", get_this_url(), http_build_query($voter_info));
 
       header('Location: ' . $redirect_url);
-      //error_log("Redirecting to $redirect_url");
+      error_log("Redirecting to $redirect_url");
       print "Redirecting to $redirect_url";
       exit(0);
     }
@@ -36,7 +38,7 @@
 
   if (array_key_exists('cd', $_GET)) {
     // lookup Airtable details, caching if found
-    $PROFILE = get_candidate_info(get_sd(), get_hd(), get_cd());
+    $PROFILE = get_candidate_info(get_sd(), get_hd(), get_cd(), get_county(), get_sbe());
     $QUESTIONS = get_candidate_questions();
 
     if (!$PROFILE) {
@@ -172,6 +174,38 @@
       </div>
     </div><!-- card -->
 
+  <?php
+    $sbe_candidates = get_matching_candidates($PROFILE, 'State Board of Education');
+    $da_candidates = get_matching_candidates($PROFILE, 'District Attorney');
+
+    if (count($sbe_candidates) || count($da_candidates)) {
+  ?>
+
+    <div class="card">
+      <div class="card-header nav-bg text-light" id="local-races-header">
+        <h3 class="mb-0">
+          <i class="fas fa-university"></i> State Races
+          <button class="btn btn-link float-right" data-toggle="collapse" data-target="#local-races" aria-expanded="true" aria-controls="local-races"></button>
+        </h3>
+      </div>
+
+      <div id="local-races" class="collapse show" aria-labelledby="local-races-header" data-parent="#voter-profile">
+        <div class="card-body">
+         <?php if (count($da_candidates)) { ?>
+          <div class="h2">District Attorney</div>
+          <?php $candidates = $da_candidates; include __DIR__ . '/candidates-layout.php'; ?>
+         <?php } ?>
+
+         <?php if (count($sbe_candidates)) { ?>
+          <div class="h2">State Board of Education</div>
+          <?php $candidates = $sbe_candidates; include __DIR__ . '/candidates-layout.php'; ?>
+         <?php } ?>
+        </div>
+      </div>
+    </div><!-- card -->
+
+  <?php } ?>
+
     <?php if ($_ENV['DEBUG']) { ?>
     <small>
     <pre>
@@ -189,7 +223,7 @@
 
   <?php } else { ?>
    <div class="container mt-2 mb-4">
-    <?php if ($ERROR) { ?>
+    <?php if (isset($ERROR)) { ?>
     <div class="alert alert-danger" role="alert"><?= $ERROR ?></div>
     <?php } ?>
     <div class="address-form">
