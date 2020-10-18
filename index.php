@@ -97,14 +97,17 @@
       .Democratic {
         color: #0015BC;
         border-color: #0015BC!important;
+        border-width: 2px;
       }
       .Republican {
         color: #E9141D;
         border-color: #E9141D!important;
+        border-width: 2px;
       }
       .Libertarian {
         color: #E5C601;
         border-color: #E5C601!important;
+        border-width: 2px;
       }
       .question {
         font-weight: bold;
@@ -166,10 +169,10 @@
       <div id="state-races" class="collapse show" aria-labelledby="state-races-header" data-parent="#voter-profile">
         <div class="card-body">
           <div class="h2">State Senate #<?= get_sd() ?></div>
-          <?php $candidates = get_senate_candidates($PROFILE); include __DIR__ . '/candidates-layout.php'; ?>
+          <?php $candidates = get_senate_candidates($PROFILE); include __DIR__ . '/candidates-with-questions-layout.php'; ?>
 
           <div class="h2 mt-4">State House #<?= get_hd() ?></div>
-          <?php $candidates = get_house_candidates($PROFILE); include __DIR__ . '/candidates-layout.php'; ?>
+          <?php $candidates = get_house_candidates($PROFILE); include __DIR__ . '/candidates-with-questions-layout.php'; ?>
         </div>
       </div>
     </div><!-- card -->
