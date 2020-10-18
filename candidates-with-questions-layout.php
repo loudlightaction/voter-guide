@@ -32,7 +32,6 @@
 
 <!-- candidate issues -->
 <?php
-ksort($QUESTIONS); // sort by $field since $question has emoji prefix
 foreach($QUESTIONS as $field => $question) {
   if (strlen($question) == 0) { continue; }
   // TODO check if any answers exist for any candidate and skip otherwise

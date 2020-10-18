@@ -39,7 +39,8 @@
   if (array_key_exists('cd', $_GET)) {
     // lookup Airtable details, caching if found
     $PROFILE = get_candidate_info(get_sd(), get_hd(), get_cd(), get_county(), get_sbe());
-    $QUESTIONS = get_candidate_questions();
+    $QUESTIONS = (array)get_candidate_questions();
+    asort($QUESTIONS);
 
     if (!$PROFILE) {
       $ERROR = sprintf(
