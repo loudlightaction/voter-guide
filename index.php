@@ -13,7 +13,11 @@
     // perform Google Civic API lookup and redirect with ?sd=X&hd=Y
     $address = $_GET['address'];
     $zipcode = $_GET['zipcode'];
-    $voter_info = get_voter_info($address, $zipcode);
+    if (isset($_ENV['DISTRICTS_API'])) {
+      $voter_info = get_voter_info_via_geo($_GET['lat'], $_GET['lng']);
+    } else {
+      $voter_info = get_voter_info($address, $zipcode);
+    }
 
     if ($voter_info) {
       // if Google did not have state leg info, try again with openstates

@@ -64,6 +64,13 @@ function get_this_url($scheme=null) {
     $_SERVER['PHP_SELF']);
 }
 
+function get_voter_info_via_geo($lat, $lng) {
+  $api_url = sprintf('https://www.statedemocrats.us/kansas/map/districts.php?lat=%s&lng=%s', $lat, $lng);
+  $options = array('timeout' => 2.5,);
+  $response = Requests::get($api_url, array('Content-Type' => 'application/json'), $options);
+  return json_decode($response->body, true);
+}
+
 function get_voter_info($address, $zipcode) {
   $api_url = sprintf(
     'https://www.googleapis.com/civicinfo/v2/representatives?key=%s&address=%s&electionId=%s',
@@ -234,6 +241,10 @@ function get_county() {
 }
 
 function get_sbe() {
+  if (isset($_GET['sbe']) && preg_match("/^\d+$/", $_GET['sbe'])) {
+    return $_GET['sbe'];
+  }
+
   # senate district => sbe district
   $sbe2sd = array(
     '1' => array(3, 4, 5, 6),
