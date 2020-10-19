@@ -1,7 +1,7 @@
 <!-- candidate profiles -->
 <?php foreach($candidates as $candidate) { ?>
   <div class="row candidate border-bottom border-dark mt-3 pb-3">
-    <div class="col-2 headshot">
+    <div class="col-3 headshot">
       <?php if (isset($candidate->{'fields'}->{'Photo'}[0]->{'thumbnails'}->{'large'}->{'url'})) { ?>
       <img class="img-thumbnail <?= $candidate->{'fields'}->{'Party'} ?>" src="<?= $candidate->{'fields'}->{'Photo'}[0]->{'thumbnails'}->{'large'}->{'url'} ?>" />
       <?php } else { ?>

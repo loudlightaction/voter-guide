@@ -175,7 +175,7 @@ function get_candidate_questions() {
     if (!$f->{'fields'} || !$f->{'fields'}->{'Name'}) {
       continue;
     }
-    $questions[$f->{'fields'}->{'Name'}] = $f->{'fields'}->{'question'};
+    $questions[$f->{'fields'}->{'Name'}] = $f->{'fields'};
   }
   if (count($questions) > 0) {
     $ttl = isset($_ENV['QUESTION_CACHE_TTL']) ? $_ENV['QUESTION_CACHE_TTL'] : 3600;
