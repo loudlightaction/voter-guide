@@ -45,7 +45,7 @@ foreach($QUESTIONS as $field => $question) {
   if (!$answers_exist) { continue; }
 ?>
 <div class="row">
- <div class="container issue mt-3 border-bottom border-dark pb-3">
+ <div class="container-fluid issue mt-3 border-bottom border-dark pb-3">
   <div class="row question mb-2">
     <div class="col">
       <?= $question ?>
