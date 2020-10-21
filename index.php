@@ -262,8 +262,7 @@
         <div class="col text-center p-2">
           <div><a class="text-light" href="https://www.ksvotes.org/r/ksvoterguide">Voting Location</a></div>
           <div><a class="text-light" href="https://www.ksvotes.org/r/ksvoterguide">Check Voter Registration</a></div>
-          <div><a class="text-light" href="https://myvoteinfo.voteks.org/voterview/">Sample Ballot</a></div>
-          <div><a class="text-light" href="https://loudlightaction.org/methodology">Issue Stance Methodology</a></div>
+          <div><a class="text-light" href="https://loudlightaction.org/methodology">Issue Stance Methodology / Suggestions</a></div>
           <div class="font-italic"><a class="text-light" href="https://loudlightaction.org/">A project of Loud Light Civic Action</a></div>
         </div>
       </div>
